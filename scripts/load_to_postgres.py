@@ -1,7 +1,8 @@
 import psycopg2
+import os
 import pandas as pd
 from datetime import datetime
-
+from dotenv import load_dotenv
 
 try:
     # Load the cleaned dataset
@@ -10,15 +11,18 @@ try:
     # Convert 'acq_date' to datetime
     data['acq_date'] = pd.to_datetime(data['acq_date']).dt.date
 
+    load_dotenv()
+
     # Connect to PostgreSQL
     conn = psycopg2.connect(
-        dbname="wildfire_db",
-        user="postgres",  # Replace with your PostgreSQL username
-        password="postgres",  # Replace with your PostgreSQL password
-        host="localhost",
-        port="5432"
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
     )
     cursor = conn.cursor()
+    print("[SUCCESS] Successfully connected to PostgreSQL")
 
     # Insert data into the table
     for _, row in data.iterrows():
@@ -35,7 +39,7 @@ try:
     cursor.close()
     conn.close()
 
-    print("Data successfully loaded into PostgreSQL!")
+    print("[SUCCESS] Data successfully loaded into PostgreSQL!")
 
 except Exception as e:
     print(f"Error: {e}")
