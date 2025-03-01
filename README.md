@@ -24,7 +24,6 @@ This project analyzes and visualizes wildfire data in California using MODIS sat
 3. Run the geospatial analysis script:
     python scripts/geospatial_analysis.py
 
-
 ## Live Demo
 An interactive map of California wildfires is hosted on Netlify. You can view it here:
 https://california-wildfires-analysis.netlify.app
