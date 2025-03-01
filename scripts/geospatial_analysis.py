@@ -5,6 +5,11 @@ import geopandas as gpd
 from shapely.geometry import Point
 import folium
 from dotenv import load_dotenv
+import warnings
+from datetime import datetime, timedelta
+
+# Ignore warnings
+warnings.filterwarnings('ignore') 
 
 try:
     load_dotenv()
@@ -27,6 +32,16 @@ try:
     # Close the connection
     conn.close()
 
+    # Convert 'acq_date' to datetime
+    data['acq_date'] = pd.to_datetime(data['acq_date'])
+
+    # Filter data for high-confidence fires (confidence > 80)
+    data = data[data['confidence'] > 80]
+
+    # Filter data for the last year
+    one_year_ago = pd.to_datetime(datetime.now() - timedelta(days=1460))
+    data = data[data['acq_date'] >= one_year_ago]
+
     # Convert latitude and longitude to a geospatial DataFrame
     geometry = [Point(xy) for xy in zip(data['longitude'], data['latitude'])]
     gdf = gpd.GeoDataFrame(data, geometry=geometry)
@@ -43,7 +58,7 @@ try:
             fill=True,
             fill_color='red',
             fill_opacity=0.6,
-            popup=f"Brightness: {row['brightness']}, FRP: {row['frp']}, Date: {row['acq_date']}"
+            popup=f"Brightness: {row['brightness']}, FRP: {row['frp']}, Date: {row['acq_date'].strftime('%Y-%m-%d')}"
         ).add_to(california_map)
 
     # Save the map to an HTML file

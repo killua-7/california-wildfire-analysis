@@ -3,6 +3,10 @@ import os
 import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
+import warnings
+
+# Ignore warnings
+warnings.filterwarnings('ignore') 
 
 try:
     # Load the cleaned dataset
