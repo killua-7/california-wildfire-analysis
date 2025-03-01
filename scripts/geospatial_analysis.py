@@ -36,7 +36,7 @@ try:
     data['acq_date'] = pd.to_datetime(data['acq_date'])
 
     # Filter data for high-confidence fires (confidence > 80)
-    data = data[data['confidence'] > 95]
+    data = data[data['confidence'] > 80]
 
     # Filter data for the last year
     one_year_ago = pd.to_datetime(datetime.now() - timedelta(days=1460))
